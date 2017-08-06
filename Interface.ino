@@ -1,3 +1,4 @@
+#include <Wire.h>
 
 #include "Interface.h"
 
@@ -24,6 +25,28 @@ bool DIAL::update()
 }
 
 float DIAL::value() const
+{
+  return m_current_value / 1024.0f;
+}
+
+//////////////////////////////////////
+
+I2C_DIAL::I2C_DIAL() :
+  m_current_value(0)
+{
+  
+}
+
+void I2C_DIAL::update()
+{
+  // I2C should already be setup by this point ( Wire.requestFrom() )
+  const byte b1 = Wire.read();
+  const byte b2 = Wire.read();
+
+  m_current_value = b1 | ( b2 << 8 );
+}
+
+float I2C_DIAL::value() const
 {
   return m_current_value / 1024.0f;
 }

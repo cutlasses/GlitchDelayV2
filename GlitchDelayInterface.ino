@@ -3,10 +3,12 @@
 
   
 GLITCH_DELAY_INTERFACE::GLITCH_DELAY_INTERFACE() :
-  m_loop_size_dial( LOOP_SIZE_DIAL_PIN ),
-  m_loop_speed_dial( LOOP_SPEED_DIAL_PIN ),
-  m_feedback_dial( FEEDBACK_DIAL_PIN ),
-  m_mix_dial( MIX_DIAL_PIN ),
+  m_loop_size_dial(),
+  m_loop_speed_dial(),
+  m_feedback_dial(),
+  m_low_mix_dial(),
+  m_high_mix_dial(),
+  m_mix_dial(),
   m_bpm_button( BPM_BUTTON_PIN, false ),
   m_mode_button( MODE_BUTTON_PIN, false ),
   m_tap_bpm( BPM_BUTTON_PIN ),
@@ -37,10 +39,16 @@ void GLITCH_DELAY_INTERFACE::setup()
 }
 
 void GLITCH_DELAY_INTERFACE::update( uint32_t time_in_ms )
-{  
+{
+  // start I2C with PIC chip
+  Wire.requestFrom(123, 16);    // request
+
+  // read each pot
   m_loop_size_dial.update();
   m_loop_speed_dial.update();
   m_feedback_dial.update();
+  m_low_mix_dial.update();
+  m_high_mix_dial.update();
   m_mix_dial.update();
   
   m_bpm_button.update( time_in_ms );
@@ -118,22 +126,32 @@ void GLITCH_DELAY_INTERFACE::update( uint32_t time_in_ms )
 #endif // DEBUG_OUTPUT
 }
 
-const DIAL& GLITCH_DELAY_INTERFACE::loop_size_dial() const
+const I2C_DIAL& GLITCH_DELAY_INTERFACE::loop_size_dial() const
 {
   return m_loop_size_dial;
 }
 
-const DIAL& GLITCH_DELAY_INTERFACE::loop_speed_dial() const
+const I2C_DIAL& GLITCH_DELAY_INTERFACE::loop_speed_dial() const
 {
   return m_loop_speed_dial;
 }
 
-const DIAL& GLITCH_DELAY_INTERFACE::feedback_dial() const
+const I2C_DIAL& GLITCH_DELAY_INTERFACE::feedback_dial() const
 {
   return m_feedback_dial;
 }
 
-const DIAL& GLITCH_DELAY_INTERFACE::mix_dial() const
+const I2C_DIAL& GLITCH_DELAY_INTERFACE::low_mix_dial() const
+{
+  return m_low_mix_dial;
+}
+
+const I2C_DIAL& GLITCH_DELAY_INTERFACE::hight_mix_dial() const
+{
+  return m_high_mix_dial;
+}
+
+const I2C_DIAL& GLITCH_DELAY_INTERFACE::mix_dial() const
 {
   return m_mix_dial;
 }

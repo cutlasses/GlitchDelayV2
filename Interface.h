@@ -18,6 +18,20 @@ public:
 
 //////////////////////////////////////
 
+class I2C_DIAL
+{
+  int           m_current_value;
+
+public:
+
+  I2C_DIAL();
+
+  void          update();
+  float         value() const;
+};
+
+//////////////////////////////////////
+
 class BUTTON
 {
   int16_t       m_data_pin;
