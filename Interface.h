@@ -65,12 +65,13 @@ class LED
   byte          m_brightness;
   byte          m_is_active       : 1;
   byte          m_flash_active    : 1;
+  byte          m_analog          : 1;
   uint32_t      m_flash_off_time_ms;
 
 public:
 
   LED();              // to allow for arrays
-  LED( int data_pin );
+  LED( int data_pin, bool analog );
 
   void          set_active( bool active );
   void          flash_on( uint32_t time_ms, uint32_t flash_duration );

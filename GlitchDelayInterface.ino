@@ -18,9 +18,9 @@ GLITCH_DELAY_INTERFACE::GLITCH_DELAY_INTERFACE() :
   m_change_bit_depth_valid( true ),
   m_reduced_bit_depth( false )
 {
-  m_beat_led        = LED( LED_1_PIN );
-  m_mode_leds[0]    = LED( LED_2_PIN );
-  m_mode_leds[1]    = LED( LED_3_PIN ); 
+  m_beat_led        = LED( LED_1_PIN, false );
+  m_mode_leds[0]    = LED( LED_2_PIN, false );
+  m_mode_leds[1]    = LED( LED_3_PIN, false ); 
 }
 
 void GLITCH_DELAY_INTERFACE::setup()

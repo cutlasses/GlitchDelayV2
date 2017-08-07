@@ -139,14 +139,16 @@ LED::LED() :
   m_data_pin( 0 ),
   m_is_active( false ),
   m_flash_active( false ),
+  m_analog( false ),
   m_flash_off_time_ms( 0 )
 {
 }
 
-LED::LED( int data_pin ) :
+LED::LED( int data_pin, bool analog ) :
   m_data_pin( data_pin ),
   m_is_active( false ),
   m_flash_active( false ),
+  m_analog( analog ),
   m_flash_off_time_ms( 0 )
 {
 }
@@ -181,14 +183,28 @@ void LED::update( uint32_t time_ms )
     m_is_active     = false;
     m_flash_active  = false;
   }
-  
-  if( m_is_active )
-  {   
-    analogWrite( m_data_pin, m_brightness );
+
+  if( m_analog )
+  {
+    if( m_is_active )
+    {   
+      analogWrite( m_data_pin, m_brightness );
+    }
+    else
+    {
+      analogWrite( m_data_pin, 0 );
+    }
   }
   else
   {
-    analogWrite( m_data_pin, 0 );
+    if( m_is_active )
+    {   
+      digitalWrite( m_data_pin, HIGH );
+    }
+    else
+    {
+      digitalWrite( m_data_pin, LOW );
+    }
   }
 }
 

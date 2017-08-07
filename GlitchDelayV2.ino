@@ -174,11 +174,11 @@ void loop()
   }
 
 #ifdef DEBUG_OUTPUT
-
+  /*
   static int count = 0;
   if( ++count % 1000 == 0 )
   {
-    /*
+
     Serial.print("Size ");
     Serial.print(size);
     Serial.print("\n");
@@ -196,8 +196,9 @@ void loop()
     Serial.print("\n");
   
     Serial.print("****\n");
-    */
+
   }
+  */
 
 #endif // DEBUG_OUTPUT
     
