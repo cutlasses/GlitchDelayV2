@@ -51,7 +51,7 @@ void GLITCH_DELAY_INTERFACE::update( uint32_t time_in_ms )
   m_feedback_dial.update();
   m_low_mix_dial.update();
 
-  // TEMPORARY HACK - PIC chip currently reads 16 bytes (8 pots), but only 6 are connect, so read and discard the unused bytes (TODO fix PIC code)
+  // TEMPORARY HACK - PIC chip currently reads 16 bytes (8 pots), but only 6 are connect, so read and discard the unused bytes (TODO fix PIC code, 1. order pins, 2. only read 6 pins)
   for( int i = 0; i < 4; ++i )
   {
     Wire.read();
@@ -103,15 +103,13 @@ void GLITCH_DELAY_INTERFACE::update( uint32_t time_in_ms )
 
   auto debug_dial = []( const char* dial_name, const DIAL_BASE& dial )
   {
-#ifdef DEBUG_OUTPUT
       Serial.print( dial_name );
       Serial.print( dial.value() );
       Serial.print( "\t");
-#endif
   };
 
-  debug_dial( "loop name:", m_loop_size_dial );
-  debug_dial( "loop speed:", m_loop_speed_dial );
+  debug_dial( "loop size:", m_loop_size_dial );
+  debug_dial( "loop speed/jitter:", m_loop_speed_dial );
   debug_dial( "feedback:", m_feedback_dial );
   debug_dial( "low mix:", m_low_mix_dial );
   debug_dial( "high mix:", m_high_mix_dial );
