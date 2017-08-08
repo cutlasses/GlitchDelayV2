@@ -36,6 +36,8 @@ void GLITCH_DELAY_INTERFACE::setup()
     m_mode_leds[i].setup();
     m_mode_leds[i].set_brightness( 0.25f );
   }
+
+  Wire.begin();
 }
 
 void GLITCH_DELAY_INTERFACE::update( uint32_t time_in_ms )
@@ -48,14 +50,15 @@ void GLITCH_DELAY_INTERFACE::update( uint32_t time_in_ms )
   m_loop_speed_dial.update();
   m_feedback_dial.update();
   m_low_mix_dial.update();
-  m_high_mix_dial.update();
-  m_mix_dial.update();
 
-  // PIC chip currently reads 16 bytes (8 pots), so read and discard the rest
+  // TEMPORARY HACK - PIC chip currently reads 16 bytes (8 pots), but only 6 are connect, so read and discard the unused bytes (TODO fix PIC code)
   for( int i = 0; i < 4; ++i )
   {
     Wire.read();
   }
+  
+  m_high_mix_dial.update();
+  m_mix_dial.update();
   
   m_bpm_button.update( time_in_ms );
   m_mode_button.update( time_in_ms );
@@ -98,18 +101,22 @@ void GLITCH_DELAY_INTERFACE::update( uint32_t time_in_ms )
 
 #ifdef DEBUG_OUTPUT
 
-  if( m_loop_speed_dial.update() )
+  auto debug_dial = []( const char* dial_name, const DIAL_BASE& dial )
   {
-    Serial.print("Speed ");
-    Serial.print(m_loop_speed_dial.value());
-    Serial.print("\n");
-  }
-  if( m_mix_dial.update() )
-  {
-    Serial.print("Mix ");
-    Serial.print(m_mix_dial.value());
-    Serial.print("\n");   
-  }
+#ifdef DEBUG_OUTPUT
+      Serial.print( dial_name );
+      Serial.print( dial.value() );
+      Serial.print( "\t");
+#endif
+  };
+
+  debug_dial( "loop name:", m_loop_size_dial );
+  debug_dial( "loop speed:", m_loop_speed_dial );
+  debug_dial( "feedback:", m_feedback_dial );
+  debug_dial( "low mix:", m_low_mix_dial );
+  debug_dial( "high mix:", m_high_mix_dial );
+  debug_dial( "mix:", m_mix_dial );
+  Serial.println();
   
 #endif // DEBUG_OUTPUT
 }
