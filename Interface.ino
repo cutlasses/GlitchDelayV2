@@ -4,9 +4,48 @@
 
 #define BOUNCE_TIME         10
 
-DIAL::DIAL( int data_pin ) :
-  m_data_pin( data_pin ),
-  m_current_value( 0 )
+//////////////////////////////////////
+
+DIAL_BASE::DIAL_BASE( bool invert ) :
+  m_current_value( 0 ),
+  m_invert( invert )
+{
+  
+}
+
+DIAL_BASE::~DIAL_BASE()
+{
+  
+}
+
+bool DIAL_BASE::set_current_value( int new_value )
+{
+  if( new_value != m_current_value )
+  {
+    m_current_value = new_value;
+    return true;
+  }
+
+  return false; 
+}
+
+float DIAL_BASE::value() const
+{
+  const float vf = m_current_value / 1024.0f;
+
+  if( m_invert )
+  {
+    return 1.0f - vf;
+  }
+  else
+  {
+    return vf;
+  }
+}
+
+DIAL::DIAL( int data_pin, bool invert ) :
+  DIAL_BASE( invert ),
+  m_data_pin( data_pin )
 {
 
 }
@@ -15,40 +54,26 @@ bool DIAL::update()
 {
   int new_value = analogRead( m_data_pin );
 
-  if( new_value != m_current_value )
-  {
-    m_current_value = new_value;
-    return true;
-  }
-
-  return false;
-}
-
-float DIAL::value() const
-{
-  return m_current_value / 1024.0f;
+  return set_current_value( new_value );
 }
 
 //////////////////////////////////////
 
-I2C_DIAL::I2C_DIAL() :
-  m_current_value(0)
+I2C_DIAL::I2C_DIAL( bool invert ) :
+  DIAL_BASE( invert )
 {
   
 }
 
-void I2C_DIAL::update()
+bool I2C_DIAL::update()
 {
   // I2C should already be setup by this point ( Wire.requestFrom() )
   const byte b1 = Wire.read();
   const byte b2 = Wire.read();
 
-  m_current_value = b1 | ( b2 << 8 );
-}
+ int new_value = b1 | ( b2 << 8 );
 
-float I2C_DIAL::value() const
-{
-  return m_current_value / 1024.0f;
+  return set_current_value( new_value );
 }
 
 //////////////////////////////////////

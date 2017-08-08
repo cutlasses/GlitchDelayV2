@@ -2,32 +2,47 @@
 
 #include <Bounce.h>
 
-class DIAL
-{
-  int           m_data_pin;
+//////////////////////////////////////
 
+class DIAL_BASE
+{
   int           m_current_value;
-  
+  bool          m_invert;
+
+protected:
+
+  bool         set_current_value( int new_value );
+
 public:
 
-  DIAL( int data_pin );
+  DIAL_BASE( bool invert );
+  virtual ~DIAL_BASE();
 
-  bool          update();
-  float         value() const;  
+  float         value() const;
 };
 
 //////////////////////////////////////
 
-class I2C_DIAL
+class DIAL : public DIAL_BASE
 {
-  int           m_current_value;
-
+  int           m_data_pin;
+  
 public:
 
-  I2C_DIAL();
+  DIAL( int data_pin, bool invert );
 
-  void          update();
-  float         value() const;
+  bool          update();
+};
+
+//////////////////////////////////////
+
+class I2C_DIAL : public DIAL_BASE
+{
+public:
+
+  I2C_DIAL( bool invert );
+
+  bool          update();
 };
 
 //////////////////////////////////////

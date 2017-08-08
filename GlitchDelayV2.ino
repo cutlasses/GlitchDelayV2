@@ -181,22 +181,21 @@ void loop()
 
     Serial.print("Size ");
     Serial.print(size);
-    Serial.print("\n");
+    Serial.print("\t");
     
     Serial.print("speed ");
     Serial.print(speed);
-    Serial.print("\n");
+    Serial.print("\t");
 
     Serial.print("feedback ");
     Serial.print(feedback * MAX_FEEDBACK);
-    Serial.print("\n");
+    Serial.print("\t");
       
     Serial.print("mix ");
     Serial.print(wet_dry);
     Serial.print("\n");
   
     Serial.print("****\n");
-
   }
   */
 

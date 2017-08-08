@@ -3,12 +3,12 @@
 
   
 GLITCH_DELAY_INTERFACE::GLITCH_DELAY_INTERFACE() :
-  m_loop_size_dial(),
-  m_loop_speed_dial(),
-  m_feedback_dial(),
-  m_low_mix_dial(),
-  m_high_mix_dial(),
-  m_mix_dial(),
+  m_loop_size_dial(true),
+  m_loop_speed_dial(true),
+  m_feedback_dial(true),
+  m_low_mix_dial(true),
+  m_high_mix_dial(true),
+  m_mix_dial(true),
   m_bpm_button( BPM_BUTTON_PIN, false ),
   m_mode_button( MODE_BUTTON_PIN, false ),
   m_tap_bpm( BPM_BUTTON_PIN ),
@@ -50,6 +50,12 @@ void GLITCH_DELAY_INTERFACE::update( uint32_t time_in_ms )
   m_low_mix_dial.update();
   m_high_mix_dial.update();
   m_mix_dial.update();
+
+  // PIC chip currently reads 16 bytes (8 pots), so read and discard the rest
+  for( int i = 0; i < 4; ++i )
+  {
+    Wire.read();
+  }
   
   m_bpm_button.update( time_in_ms );
   m_mode_button.update( time_in_ms );
@@ -91,11 +97,11 @@ void GLITCH_DELAY_INTERFACE::update( uint32_t time_in_ms )
   }
 
 #ifdef DEBUG_OUTPUT
-  /*
-  if( m_speed_dial.update() )
+
+  if( m_loop_speed_dial.update() )
   {
     Serial.print("Speed ");
-    Serial.print(m_speed_dial.value());
+    Serial.print(m_loop_speed_dial.value());
     Serial.print("\n");
   }
   if( m_mix_dial.update() )
@@ -104,25 +110,7 @@ void GLITCH_DELAY_INTERFACE::update( uint32_t time_in_ms )
     Serial.print(m_mix_dial.value());
     Serial.print("\n");   
   }
-  if( m_length_dial.update() )
-  {
-    Serial.print("Length ");
-    Serial.print(m_length_dial.value());
-    Serial.print("\n");
-  }
-  if( m_position_dial.update() )
-  {
-    Serial.print("Position ");
-    Serial.print(m_position_dial.value());
-    Serial.print("\n");   
-  }
-  m_freeze_button.update();
-
-  if( m_freeze_button.active() )
-  {
-    Serial.print("on\n");
-  }
-  */
+  
 #endif // DEBUG_OUTPUT
 }
 
