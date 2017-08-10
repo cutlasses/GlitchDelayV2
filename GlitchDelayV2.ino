@@ -124,6 +124,7 @@ void loop()
     Serial.println("START RAW");
     raw_player.play( "GUITAR.RAW" ); 
     //raw_player.play( "DRUMLOOP.RAW" );
+    Serial.println("RAW Playing");
   }
 #endif
 
