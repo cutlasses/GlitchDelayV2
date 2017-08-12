@@ -47,7 +47,7 @@ public:
   const I2C_DIAL& loop_speed_dial() const;
   const I2C_DIAL& feedback_dial() const;
   const I2C_DIAL& low_mix_dial() const;
-  const I2C_DIAL& hight_mix_dial() const;
+  const I2C_DIAL& high_mix_dial() const;
   const I2C_DIAL& mix_dial() const;
 
   const TAP_BPM&  tap_bpm() const;

@@ -134,7 +134,7 @@ const I2C_DIAL& GLITCH_DELAY_INTERFACE::low_mix_dial() const
   return m_low_mix_dial;
 }
 
-const I2C_DIAL& GLITCH_DELAY_INTERFACE::hight_mix_dial() const
+const I2C_DIAL& GLITCH_DELAY_INTERFACE::high_mix_dial() const
 {
   return m_high_mix_dial;
 }

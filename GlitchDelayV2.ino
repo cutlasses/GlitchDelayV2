@@ -158,6 +158,10 @@ void loop()
   const bool move_loop = glitch_delay_interface.mode() == 0;
   glitch_delay_effect.set_loop_moving( move_loop );
 
+  glitch_mixer.gain( 0, glitch_delay_interface.low_mix_dial().value() * 0.5f );
+  glitch_mixer.gain( 1, 0.5f );
+  glitch_mixer.gain( 2, glitch_delay_interface.high_mix_dial().value() * 0.5f );
+
   if( glitch_delay_interface.tap_bpm().beat_type() == TAP_BPM::AUTO_BEAT )
   {
     glitch_delay_effect.set_beat();
