@@ -1,6 +1,8 @@
 #include "GlitchDelayInterface.h"
 #include "CompileSwitches.h"
 
+const int I2C_ADDRESS(111); 
+const int I2C_DATA_SIZE_IN_BYTES(12);
   
 GLITCH_DELAY_INTERFACE::GLITCH_DELAY_INTERFACE() :
   m_loop_size_dial(true),
@@ -43,20 +45,13 @@ void GLITCH_DELAY_INTERFACE::setup()
 void GLITCH_DELAY_INTERFACE::update( uint32_t time_in_ms )
 {
   // start I2C with PIC chip
-  Wire.requestFrom(123, 16);    // request
+  Wire.requestFrom(I2C_ADDRESS, I2C_DATA_SIZE_IN_BYTES); 
 
   // read each pot
   m_loop_size_dial.update();
   m_loop_speed_dial.update();
   m_feedback_dial.update();
   m_low_mix_dial.update();
-
-  // TEMPORARY HACK - PIC chip currently reads 16 bytes (8 pots), but only 6 are connect, so read and discard the unused bytes (TODO fix PIC code, 1. order pins, 2. only read 6 pins)
-  for( int i = 0; i < 4; ++i )
-  {
-    Wire.read();
-  }
-  
   m_high_mix_dial.update();
   m_mix_dial.update();
   

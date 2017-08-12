@@ -21,7 +21,9 @@
 #pragma config BORV = LO        // Brown-out Reset Voltage Selection (Brown-out Reset Voltage (Vbor), low trip point selected.)
 #pragma config LVP = OFF        // Low-Voltage Programming Enable (High-voltage on MCLR/VPP must be used for programming)
 
-#define DATA_SIZE 16
+#define I2C_ADDRESS 111
+#define DATA_SIZE_BYTES 12
+#define DATA_SIZE_WORDS 6
 
 typedef unsigned char byte;
 
@@ -29,7 +31,9 @@ volatile int adc_channel = 0;
 
 volatile int adc_send_index = 0;
 
-volatile unsigned int adc_result[8] = 0;
+volatile int adc_result[ DATA_SIZE_WORDS ] = 0;
+
+volatile int adc_pins[ DATA_SIZE_WORDS ] = { 3, 6, 2, 1, 0, 7 };
 
 
 ////////////////////////////////////////////////////////////
@@ -75,7 +79,7 @@ void interrupt ISR(void)
 
                 SSP1BUF = ((byte*)adc_result)[adc_send_index];
 
-                if( ++adc_send_index >= 16 )
+                if( ++adc_send_index >= DATA_SIZE_BYTES )
                 {
                     adc_send_index = 0;
                 }
@@ -122,10 +126,11 @@ void doADC()
 		// Connect ADC to the correct analog input
 		case ADC_CONNECT: 
 		{                     
-			ADCON0      = 0b00000001 | (adc_channel<<2);
-			TMR0        = 0;
+            int adc_pin   = adc_pins[ adc_channel ];
+			ADCON0        = 0b00000001 | (adc_pin<<2);
+			TMR0          = 0;
 
-			adcState    = ADC_ACQUIRE;
+			adcState      = ADC_ACQUIRE;
 
 			// fall through
 		}
@@ -153,7 +158,7 @@ void doADC()
 				adc_result[adc_channel] |= ADRESL;
 
 				// and prepare for the next ADC
-				if( ++adc_channel>=8 )
+				if( ++adc_channel>=DATA_SIZE_WORDS )
 				{	
 					adc_channel = 0;
 				}
@@ -183,7 +188,7 @@ void main()
 	ADCON1      = 0b10100000; //fOSC/32
 	ADCON0      = 0b00000001; // Right justify / Vdd / AD on
 
-	i2c_init(123);
+	i2c_init(I2C_ADDRESS);
 
 	adcState	= ADC_CONNECT;
 
