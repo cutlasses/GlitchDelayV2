@@ -1,6 +1,7 @@
 #pragma once
 
-#include <AudioStream.h>
+#include "TeensyJuce.h"
+#include "Util.h"
 
 #define DELAY_BUFFER_SIZE_IN_BYTES     1024*240      // 240k
 
@@ -74,7 +75,7 @@ class DELAY_BUFFER
 {
   friend PLAY_HEAD;
   
-  byte                        m_buffer[DELAY_BUFFER_SIZE_IN_BYTES];
+  uint8_t                     m_buffer[DELAY_BUFFER_SIZE_IN_BYTES];
   int                         m_buffer_size_in_samples;
   int                         m_sample_size_in_bits;
 
@@ -115,11 +116,10 @@ public:
 
 ////////////////////////////////////
 
-class GLITCH_DELAY_EFFECT : public AudioStream
-{  
+class GLITCH_DELAY_EFFECT : public TEENSY_AUDIO_STREAM_WRAPPER
+{
   static const int NUM_PLAY_HEADS = 3;
   
-  audio_block_t*        m_input_queue_array[1];
   DELAY_BUFFER          m_delay_buffer;
 
   PLAY_HEAD             m_play_heads[NUM_PLAY_HEADS];
@@ -136,12 +136,20 @@ class GLITCH_DELAY_EFFECT : public AudioStream
   int                   m_next_sample_size_in_bits;
   bool                  m_next_loop_moving;
   bool                  m_next_beat;
+    
+protected:
+    
+    void                process_audio_in_impl( int channel, const int16_t* sample_data, int num_samples ) override;
+    void                process_audio_out_impl( int channel, int16_t* sample_data, int num_samples ) override;
   
 public:
 
   GLITCH_DELAY_EFFECT();
+    
+  int                   num_input_channels() const override;
+  int                   num_output_channels() const override;
 
-  virtual void          update();
+  void                  update() override;
 
   void                  set_bit_depth( int sample_size_in_bits );
   void                  set_speed( float speed );

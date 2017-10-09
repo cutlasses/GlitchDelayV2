@@ -1,9 +1,12 @@
+#ifdef TARGET_TEENSY
 #include <Audio.h>
 #include <Wire.h>
 #include <SPI.h>
 #include <SD.h>
 #include <SerialFlash.h>
+#endif // TARGET_TEENSY
 
+#include <string.h>
 #include <Math.h>
 #include "GlitchDelayEffect.h"
 #include "CompileSwitches.h"
@@ -11,6 +14,11 @@
 
 const float MIN_SPEED( 0.25f );
 const float MAX_SPEED( 4.0f );
+
+#ifdef TARGET_JUCE
+const int AUDIO_BLOCK_SAMPLES( 512 );           // TODO need a value in JUCE, is it even constant?
+const int AUDIO_SAMPLE_RATE( 44100 );           // TODO need a value in JUCE
+#endif
 
 const int FIXED_FADE_TIME_SAMPLES( (AUDIO_SAMPLE_RATE / 1000.0f ) * 4 ); // 4ms cross fade
 const int MIN_LOOP_SIZE_IN_SAMPLES( (FIXED_FADE_TIME_SAMPLES * 2) + AUDIO_BLOCK_SAMPLES );
@@ -76,6 +84,11 @@ PLAY_HEAD::PLAY_HEAD( const DELAY_BUFFER& delay_buffer, float play_speed ) :
   m_initial_loop_crossfade_complete(false)
 {
   set_loop_behind_write_head();
+  
+  // set head immediately (don't want to crossfade initially)
+  m_current_play_head                 = m_destination_play_head;
+  m_initial_loop_crossfade_complete   = true;
+  m_fade_samples_remaining            = 0;
 }
 
 int PLAY_HEAD::current_position() const
@@ -389,21 +402,21 @@ void PLAY_HEAD::disable_loop()
 #ifdef DEBUG_OUTPUT
 void PLAY_HEAD::debug_output()
 {
-  Serial.print("PLAY_HEAD current:");
-  Serial.print(m_current_play_head);
-  Serial.print(" destination:");
-  Serial.print(m_destination_play_head);
-  Serial.print(" loop start:");
-  Serial.print(m_loop_start);
-  Serial.print(" loop end:");
-  Serial.print(m_loop_end);
-  Serial.print(" fade samples:");
-  Serial.print(m_fade_samples_remaining);
+  DEBUG_TEXT("PLAY_HEAD current:");
+  DEBUG_TEXT(m_current_play_head);
+  DEBUG_TEXT(" destination:");
+  DEBUG_TEXT(m_destination_play_head);
+  DEBUG_TEXT(" loop start:");
+  DEBUG_TEXT(m_loop_start);
+  DEBUG_TEXT(" loop end:");
+  DEBUG_TEXT(m_loop_end);
+  DEBUG_TEXT(" fade samples:");
+  DEBUG_TEXT(m_fade_samples_remaining);
   if( !m_initial_loop_crossfade_complete )
   {
-    Serial.print(" INITIAL CF");
+    DEBUG_TEXT(" INITIAL CF");
   }
-  Serial.print("\n");
+  DEBUG_TEXT("\n");
 }
 #endif
 
@@ -696,8 +709,6 @@ void DELAY_BUFFER::debug_output()
 /////////////////////////////////////////////////////////////////////
 
 GLITCH_DELAY_EFFECT::GLITCH_DELAY_EFFECT() :
-  AudioStream( 1, m_input_queue_array ),
-  m_input_queue_array(),
   m_delay_buffer(),
   m_play_heads( { PLAY_HEAD( m_delay_buffer, 0.5f ), PLAY_HEAD( m_delay_buffer, 1.0f ), PLAY_HEAD( m_delay_buffer, 2.0f ) } ),
   m_speed_ratio(1.0f),
@@ -712,61 +723,70 @@ GLITCH_DELAY_EFFECT::GLITCH_DELAY_EFFECT() :
 
 }
 
+void GLITCH_DELAY_EFFECT::process_audio_in_impl( int channel, const int16_t* sample_data, int num_samples )
+{
+    ASSERT_MSG( channel == 0, "Only mono input supported" );
+    
+    m_delay_buffer.write_to_buffer( sample_data, num_samples );
+}
+
+void GLITCH_DELAY_EFFECT::process_audio_out_impl( int channel, int16_t* sample_data, int num_samples )
+{
+
+    ASSERT_MSG( !m_play_heads[channel].position_inside_next_read( m_delay_buffer.write_head(), num_samples ), "Non - reading over write buffer\n" ); // position after write head is OLD DATA
+    m_play_heads[channel].read_from_play_head( sample_data, num_samples );
+}
+
+int GLITCH_DELAY_EFFECT::num_input_channels() const
+{
+    return 1;
+}
+
+int GLITCH_DELAY_EFFECT::num_output_channels() const
+{
+    return 3;
+}
+
 void GLITCH_DELAY_EFFECT::update()
-{        
-  m_delay_buffer.set_bit_depth( m_next_sample_size_in_bits );
-  m_loop_moving               = m_next_loop_moving;
-
-  for( int pi = 0; pi < NUM_PLAY_HEADS; ++pi )
-  {
-    if( m_loop_moving )
-    {
-      m_play_heads[pi].set_shift_speed( m_speed_ratio );
-    }
-    else
-    {
-      m_play_heads[pi].set_shift_speed( 0.0f );
-      m_play_heads[pi].set_jitter( m_speed_ratio );
-    }
-  
-    m_play_heads[pi].set_loop_size( m_loop_size_ratio );
-  
-    // check whether the write head is about to run over the read head, in which case cross fade read head to new position
-    if( m_play_heads[pi].position_inside_section( m_delay_buffer.write_head(), m_play_heads[pi].buffered_loop_start(), m_play_heads[pi].loop_end() ) )
-    {
-      m_play_heads[pi].set_loop_behind_write_head();
-    }
-    else if( m_next_beat && !m_play_heads[pi].crossfade_active() )
-    {
-      m_play_heads[pi].set_next_loop();
-      m_play_heads[pi].set_loop_behind_write_head();
-    }
-  }
-  m_next_beat = false;
-  
-
-  audio_block_t* read_block        = receiveReadOnly();
-
-  if( read_block != nullptr )
-  {
-    m_delay_buffer.write_to_buffer( read_block->data, AUDIO_BLOCK_SAMPLES );
-    release( read_block );
-
+{  
+    m_delay_buffer.set_bit_depth( m_next_sample_size_in_bits );
+    m_loop_moving               = m_next_loop_moving;
+    
     for( int pi = 0; pi < NUM_PLAY_HEADS; ++pi )
     {
-      audio_block_t* write_block = allocate();
-
-      if( write_block != nullptr )
-      {
-        ASSERT_MSG( !m_play_heads[pi].position_inside_next_read( m_delay_buffer.write_head(), AUDIO_BLOCK_SAMPLES ), "Non - reading over write buffer\n" ); // position after write head is OLD DATA
-        m_play_heads[pi].read_from_play_head( write_block->data, AUDIO_BLOCK_SAMPLES );
-    
-        transmit( write_block, pi );
-    
-        release( write_block ); // note is this legal? may want to allocate a new block each time
-      }
+        if( m_loop_moving )
+        {
+            m_play_heads[pi].set_shift_speed( m_speed_ratio );
+        }
+        else
+        {
+            m_play_heads[pi].set_shift_speed( 0.0f );
+            m_play_heads[pi].set_jitter( m_speed_ratio );
+        }
+        
+        m_play_heads[pi].set_loop_size( m_loop_size_ratio );
+        
+        // check whether the write head is about to run over the read head, in which case cross fade read head to new position
+        if( m_play_heads[pi].position_inside_section( m_delay_buffer.write_head(), m_play_heads[pi].buffered_loop_start(), m_play_heads[pi].loop_end() ) )
+        {
+            m_play_heads[pi].set_loop_behind_write_head();
+        }
+        else if( m_next_beat && !m_play_heads[pi].crossfade_active() )
+        {
+            m_play_heads[pi].set_next_loop();
+            m_play_heads[pi].set_loop_behind_write_head();
+        }
     }
-  }
+    m_next_beat = false;
+    
+    // read in on channel 0
+    process_audio_in( 0 );
+    
+    // write out all the playheads TODO this uses more output than there are channels!!
+    for( int pi = 0; pi < NUM_PLAY_HEADS; ++pi )
+    {
+        process_audio_out( pi );
+    }
 }
 
 void GLITCH_DELAY_EFFECT::set_bit_depth( int sample_size_in_bits )
