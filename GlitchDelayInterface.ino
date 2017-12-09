@@ -5,12 +5,7 @@ const int I2C_ADDRESS(111);
 const int I2C_DATA_SIZE_IN_BYTES(12);
   
 GLITCH_DELAY_INTERFACE::GLITCH_DELAY_INTERFACE() :
-  m_loop_size_dial(true),
-  m_loop_speed_dial(true),
-  m_feedback_dial(true),
-  m_low_mix_dial(true),
-  m_high_mix_dial(true),
-  m_mix_dial(true),
+  m_dials( { I2C_DIAL( true ), I2C_DIAL( true ), I2C_DIAL( true ), I2C_DIAL( true ), I2C_DIAL( true ), I2C_DIAL( true ) } ),
   m_bpm_button( BPM_BUTTON_PIN, false ),
   m_mode_button( MODE_BUTTON_PIN, false ),
   m_tap_bpm( BPM_BUTTON_PIN ),
@@ -45,15 +40,13 @@ void GLITCH_DELAY_INTERFACE::setup()
 void GLITCH_DELAY_INTERFACE::update( uint32_t time_in_ms )
 {
   // start I2C with PIC chip
-  Wire.requestFrom(I2C_ADDRESS, I2C_DATA_SIZE_IN_BYTES); 
+  Wire.requestFrom(I2C_ADDRESS, I2C_DATA_SIZE_IN_BYTES);
 
   // read each pot
-  m_loop_size_dial.update();
-  m_loop_speed_dial.update();
-  m_feedback_dial.update();
-  m_low_mix_dial.update();
-  m_high_mix_dial.update();
-  m_mix_dial.update();
+  for( int d = 0; d < NUM_DIALS; ++d )
+  {
+    m_dials[d].update();
+  }
   
   m_bpm_button.update( time_in_ms );
   m_mode_button.update( time_in_ms );
@@ -65,22 +58,6 @@ void GLITCH_DELAY_INTERFACE::update( uint32_t time_in_ms )
       m_beat_led.flash_on( time_in_ms, 100 );
   }
   m_beat_led.update( time_in_ms );
-
-  /*
-  if( m_mode_button.down_time_ms() > BIT_DEPTH_BUTTON_HOLD_TIME_MS && m_change_bit_depth_valid )
-  {
-    m_reduced_bit_depth = !m_reduced_bit_depth;
-
-    // don't allow the mode to change until button is released
-    m_change_bit_depth_valid = false;
-  }
-
-  if( !m_change_bit_depth_valid && !m_mode_button.active() )
-  {
-    // once the mode button has been released, we can change the mode again
-    m_change_bit_depth_valid = true;
-  }
-  */
 
   if( m_mode_button.single_click() )
   {
@@ -96,52 +73,61 @@ void GLITCH_DELAY_INTERFACE::update( uint32_t time_in_ms )
 
 #ifdef DEBUG_OUTPUT
 
-  auto debug_dial = []( const char* dial_name, const DIAL_BASE& dial )
+  auto debug_dial = []( int dial_index, const DIAL_BASE& dial )
   {
-      Serial.print( dial_name );
+      Serial.print( dial_index );
+      Serial.print( ":" );
       Serial.print( dial.value() );
       Serial.print( "\t");
   };
 
-  debug_dial( "loop size:", m_loop_size_dial );
-  debug_dial( "loop speed/jitter:", m_loop_speed_dial );
-  debug_dial( "feedback:", m_feedback_dial );
-  debug_dial( "low mix:", m_low_mix_dial );
-  debug_dial( "high mix:", m_high_mix_dial );
-  debug_dial( "mix:", m_mix_dial );
+  for( int d = 0; d < NUM_DIALS; ++d )
+  {
+    debug_dial( d, m_dials[d] );
+  }
   Serial.println();
   
 #endif // DEBUG_OUTPUT
 }
 
-const I2C_DIAL& GLITCH_DELAY_INTERFACE::loop_size_dial() const
+float GLITCH_DELAY_INTERFACE::loop_size() const
 {
-  return m_loop_size_dial;
+  return m_dials[0].value();
 }
 
-const I2C_DIAL& GLITCH_DELAY_INTERFACE::loop_speed_dial() const
+float GLITCH_DELAY_INTERFACE::loop_speed() const
 {
-  return m_loop_speed_dial;
+  return m_dials[1].value();
 }
 
-const I2C_DIAL& GLITCH_DELAY_INTERFACE::feedback_dial() const
+float GLITCH_DELAY_INTERFACE::feedback() const
 {
-  return m_feedback_dial;
+  return 0.7f;
 }
 
-const I2C_DIAL& GLITCH_DELAY_INTERFACE::low_mix_dial() const
+float GLITCH_DELAY_INTERFACE::low_mix() const
 {
-  return m_low_mix_dial;
+  return m_dials[2].value();
 }
 
-const I2C_DIAL& GLITCH_DELAY_INTERFACE::high_mix_dial() const
+float GLITCH_DELAY_INTERFACE::normal_mix() const
 {
-  return m_high_mix_dial;
+  return m_dials[3].value();
 }
 
-const I2C_DIAL& GLITCH_DELAY_INTERFACE::mix_dial() const
+float GLITCH_DELAY_INTERFACE::high_mix() const
 {
-  return m_mix_dial;
+  return m_dials[4].value();
+}
+
+float GLITCH_DELAY_INTERFACE::reverse_mix() const
+{
+  return m_dials[5].value();
+}
+
+float GLITCH_DELAY_INTERFACE::dry_wet_mix() const
+{
+  return 1.0f; // fully wet
 }
 
 const TAP_BPM& GLITCH_DELAY_INTERFACE::tap_bpm() const

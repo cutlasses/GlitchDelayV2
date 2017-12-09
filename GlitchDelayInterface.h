@@ -14,16 +14,12 @@ class GLITCH_DELAY_INTERFACE
   static const int      NUM_MODES                       = 2;
 
   static const bool     FREEZE_BUTTON_IS_TOGGLE         = true;
+  static const int      NUM_DIALS                       = 6;
   static const int      NUM_LEDS                        = 3;
  
   static const int32_t  BIT_DEPTH_BUTTON_HOLD_TIME_MS   = 2000;
   
-  I2C_DIAL          m_loop_size_dial;
-  I2C_DIAL          m_loop_speed_dial;
-  I2C_DIAL          m_feedback_dial;
-  I2C_DIAL          m_low_mix_dial;
-  I2C_DIAL          m_high_mix_dial;
-  I2C_DIAL          m_mix_dial;
+  I2C_DIAL          m_dials[NUM_DIALS];
 
   BUTTON            m_bpm_button;
   BUTTON            m_mode_button;
@@ -43,12 +39,14 @@ public:
   void            setup();
   void            update( uint32_t time_in_ms );
 
-  const I2C_DIAL& loop_size_dial() const;
-  const I2C_DIAL& loop_speed_dial() const;
-  const I2C_DIAL& feedback_dial() const;
-  const I2C_DIAL& low_mix_dial() const;
-  const I2C_DIAL& high_mix_dial() const;
-  const I2C_DIAL& mix_dial() const;
+  float           loop_size() const;
+  float           loop_speed() const;
+  float           feedback() const;
+  float           low_mix() const;
+  float           normal_mix() const;
+  float           high_mix() const;
+  float           reverse_mix() const;
+  float           dry_wet_mix() const;
 
   const TAP_BPM&  tap_bpm() const;
 
