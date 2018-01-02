@@ -1,4 +1,4 @@
-Partlist exported from /Users/scottpitkethly/Documents/eagle/FreezeDelay/Main Board.sch at 02/01/2018 20:48
+
 
 Qty Value                     Device                    Package              Parts                        Description                                               
 4                             LED3MM                    LED3MM               LED1, LED2, LED3, LED4       LED                                                       
