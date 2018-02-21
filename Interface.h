@@ -1,11 +1,12 @@
 #pragma once
 
+#include <ADC.h>
 #include <Bounce.h>
 
 //////////////////////////////////////
 
 class DIAL_BASE
-{
+{  
   int           m_current_value;
   bool          m_invert;
 
@@ -25,6 +26,10 @@ public:
 
 class DIAL : public DIAL_BASE
 {
+#ifndef I2C_INTERFACE
+  static ADC*   s_adc;
+#endif
+  
   int           m_data_pin;
   
 public:

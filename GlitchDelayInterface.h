@@ -18,8 +18,12 @@ class GLITCH_DELAY_INTERFACE
   static const int      NUM_LEDS                        = 3;
  
   static const int32_t  BIT_DEPTH_BUTTON_HOLD_TIME_MS   = 2000;
-  
+
+#ifdef I2C_INTERFACE
   I2C_DIAL          m_dials[NUM_DIALS];
+#else // !I2C_INTERFACE
+  DIAL              m_dials[NUM_DIALS];
+#endif // !I2C_INTERFACE
 
   BUTTON            m_bpm_button;
   BUTTON            m_mode_button;

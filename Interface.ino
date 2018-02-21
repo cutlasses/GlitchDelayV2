@@ -1,5 +1,5 @@
 #include <Wire.h>
-
+#include <Audio.h>
 #include "Interface.h"
 
 #define BOUNCE_TIME         10
@@ -43,6 +43,10 @@ float DIAL_BASE::value() const
   }
 }
 
+#ifndef I2C_INTERFACE
+ADC* DIAL::s_adc = new ADC();
+#endif
+
 DIAL::DIAL( int data_pin, bool invert ) :
   DIAL_BASE( invert ),
   m_data_pin( data_pin )
@@ -52,7 +56,7 @@ DIAL::DIAL( int data_pin, bool invert ) :
 
 bool DIAL::update()
 {
-  int new_value = analogRead( m_data_pin );
+  int new_value = s_adc->analogRead( m_data_pin, ADC_1 );
 
   return set_current_value( new_value );
 }
