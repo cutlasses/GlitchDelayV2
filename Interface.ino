@@ -56,9 +56,15 @@ DIAL::DIAL( int data_pin, bool invert ) :
 
 bool DIAL::update()
 {
+#ifndef I2C_INTERFACE 
   int new_value = s_adc->analogRead( m_data_pin, ADC_1 );
 
   return set_current_value( new_value );
+#else
+  return 0;
+#endif
+
+
 }
 
 //////////////////////////////////////
