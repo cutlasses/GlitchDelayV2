@@ -41,7 +41,11 @@ public:
   GLITCH_DELAY_INTERFACE();
 
   void            setup();
+#ifdef I2C_INTERFACE
   void            update( uint32_t time_in_ms );
+#else // !I2C_INTERFACE
+  void            update( ADC& adc, uint32_t time_in_ms );
+#endif // !I2C_INTERFACE
 
   float           loop_size() const;
   float           loop_speed() const;

@@ -45,7 +45,11 @@ void GLITCH_DELAY_INTERFACE::setup()
 #endif
 }
 
+#ifdef I2C_INTERFACE
 void GLITCH_DELAY_INTERFACE::update( uint32_t time_in_ms )
+#else
+void GLITCH_DELAY_INTERFACE::update( ADC& adc, uint32_t time_in_ms )
+#endif
 {
 #ifdef I2C_INTERFACE
   // start I2C with PIC chip
@@ -55,7 +59,11 @@ void GLITCH_DELAY_INTERFACE::update( uint32_t time_in_ms )
   // read each pot
   for( int d = 0; d < NUM_DIALS; ++d )
   {
+#ifdef I2C_INTERFACE
     m_dials[d].update();
+#else
+    m_dials[d].update( adc );
+#endif
   }
   
   m_bpm_button.update( time_in_ms );

@@ -17,8 +17,28 @@
 #define SDCARD_MOSI_PIN  7
 #define SDCARD_SCK_PIN   14
 
-AudioInputAnalog            audio_input(A0);
-AudioOutputAnalog           audio_output;
+// wrap in a struct to ensure initialisation order
+struct IO
+{
+#ifndef I2C_INTERFACE
+  ADC                         adc;
+#endif
+  AudioInputAnalog            audio_input;
+  AudioOutputAnalog           audio_output;
+
+  IO() :
+#ifndef I2C_INTERFACE
+    adc(),
+#endif
+    audio_input(A0),
+    audio_output()
+  {
+  }
+};
+
+IO io;
+//AudioInputAnalog            audio_input(A0);
+//AudioOutputAnalog           audio_output;
 
 
 GLITCH_DELAY_EFFECT      glitch_delay_effect;
@@ -48,7 +68,7 @@ AudioConnection          patch_cord_L8( glitch_mixer, 0, wet_dry_mixer, WET_CHAN
 AudioConnection          patch_cord_L9( raw_player, 0, wet_dry_mixer, DRY_CHANNEL );
 AudioConnection          patch_cord_L10( wet_dry_mixer, 0, audio_output, 0 );
 #else // STANDALONE_AUDIO
-AudioConnection          patch_cord_L1( audio_input, 0, delay_mixer, 0 );
+AudioConnection          patch_cord_L1( io.audio_input, 0, delay_mixer, 0 );
 AudioConnection          patch_cord_L2( delay_mixer, 0, glitch_delay_effect, 0 );
 AudioConnection          patch_cord_L3( glitch_delay_effect, 0, glitch_mixer, 0 );
 AudioConnection          patch_cord_L4( glitch_delay_effect, 1, glitch_mixer, 1 );
@@ -56,10 +76,10 @@ AudioConnection          patch_cord_L5( glitch_delay_effect, 2, glitch_mixer, 2 
 AudioConnection          patch_cord_L6( glitch_delay_effect, 3, glitch_mixer, 3 );
 AudioConnection          patch_cord_L7( glitch_mixer, 0, delay_mixer, FEEDBACK_CHANNEL );
 AudioConnection          patch_cord_L8( glitch_mixer, 0, wet_dry_mixer, WET_CHANNEL );
-AudioConnection          patch_cord_L9( audio_input, 0, wet_dry_mixer, DRY_CHANNEL );
-AudioConnection          patch_cord_L10( wet_dry_mixer, 0, audio_output, 0 );
+AudioConnection          patch_cord_L9( io.audio_input, 0, wet_dry_mixer, DRY_CHANNEL );
+AudioConnection          patch_cord_L10( wet_dry_mixer, 0, io.audio_output, 0 );
 //AudioConnection          patch_cord_L1( audio_input, 0, audio_output, 0 );    // left channel passes straight through (for testing)
-AudioConnection          patch_cord_R1( audio_input, 1, audio_output, 1 );      // right channel passes straight through
+//AudioConnection          patch_cord_R1( io.audio_input, 1, io.audio_output, 1 );      // right channel passes straight through
 #endif // !STANDALONE_AUDIO
 
 GLITCH_DELAY_INTERFACE   glitch_delay_interface;
@@ -142,7 +162,11 @@ void loop()
   glitch_delay_effect.set_loop_size( 0.2f );
   */
 
+#ifdef I2C_INTERFACE
   glitch_delay_interface.update( time_in_ms );
+#else// !I2C_INTERFACE
+  glitch_delay_interface.update( io.adc, time_in_ms );
+#endif  
 
   const float wet_dry = clamp( glitch_delay_interface.dry_wet_mix(), 0.0f, 1.0f );
   wet_dry_mixer.gain( DRY_CHANNEL, 1.0f - wet_dry );

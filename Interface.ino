@@ -31,6 +31,8 @@ bool DIAL_BASE::set_current_value( int new_value )
 
 float DIAL_BASE::value() const
 {
+  return m_current_value;
+  /*
   const float vf = m_current_value / 1024.0f;
 
   if( m_invert )
@@ -41,11 +43,8 @@ float DIAL_BASE::value() const
   {
     return vf;
   }
+  */
 }
-
-#ifndef I2C_INTERFACE
-ADC* DIAL::s_adc = new ADC();
-#endif
 
 DIAL::DIAL( int data_pin, bool invert ) :
   DIAL_BASE( invert ),
@@ -54,17 +53,11 @@ DIAL::DIAL( int data_pin, bool invert ) :
 
 }
 
-bool DIAL::update()
+bool DIAL::update( ADC& adc )
 {
-#ifndef I2C_INTERFACE 
-  int new_value = s_adc->analogRead( m_data_pin, ADC_1 );
+  const int new_value = adc.analogRead( m_data_pin, ADC_1 );
 
   return set_current_value( new_value );
-#else
-  return 0;
-#endif
-
-
 }
 
 //////////////////////////////////////

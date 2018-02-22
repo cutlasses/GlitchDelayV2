@@ -25,18 +25,14 @@ public:
 //////////////////////////////////////
 
 class DIAL : public DIAL_BASE
-{
-#ifndef I2C_INTERFACE
-  static ADC*   s_adc;
-#endif
-  
+{  
   int           m_data_pin;
   
 public:
 
   DIAL( int data_pin, bool invert );
 
-  bool          update();
+  bool          update( ADC& adc );
 };
 
 //////////////////////////////////////
