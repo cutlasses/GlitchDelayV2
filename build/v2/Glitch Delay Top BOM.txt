@@ -1,0 +1,35 @@
+Partlist exported from /Users/scottpitkethly/Documents/eagle/Glitch Delay V2/Glitch Delay Top.sch at 24/04/2018 20:39
+
+Part          Value          Device           Package            Description                                       
+3.3V_PIN                     PINHD-1X1        1X01               Pin header 1x1 for 0.1" spacing                   
+AGND_PIN                     PINHD-1X1        1X01               Pin header 1x1 for 0.1" spacing                   
+AUDIO_IN      THONKICONNNEW  THONKICONNNEW    WQP-PJ301M-12_JACK 3.5mm socket for Eurorack modular synths          
+AUDIO_IN_PIN                 PINHD-1X1        1X01               Pin header 1x1 for 0.1" spacing                   
+AUDIO_OUT     THONKICONNNEW  THONKICONNNEW    WQP-PJ301M-12_JACK 3.5mm socket for Eurorack modular synths          
+AUDIO_OUT_PIN                PINHD-1X1        1X01               Pin header 1x1 for 0.1" spacing                   
+GND_PIN                      PINHD-1X1        1X01               Pin header 1x1 for 0.1" spacing                   
+LED1                         LED3MM           LED3MM             LED                                               
+LED1_PIN                     PINHD-1X1        1X01               Pin header 1x1 for 0.1" spacing                   
+LED2                         LED3MM           LED3MM             LED                                               
+LED2_PIN                     PINHD-1X1        1X01               Pin header 1x1 for 0.1" spacing                   
+LED3                         LED3MM           LED3MM             LED                                               
+LED3_PIN                     PINHD-1X1        1X01               Pin header 1x1 for 0.1" spacing                   
+POT1_PIN                     PINHD-1X1        1X01               Pin header 1x1 for 0.1" spacing                   
+POT2_PIN                     PINHD-1X1        1X01               Pin header 1x1 for 0.1" spacing                   
+POT3_PIN                     PINHD-1X1        1X01               Pin header 1x1 for 0.1" spacing                   
+POT4_PIN                     PINHD-1X1        1X01               Pin header 1x1 for 0.1" spacing                   
+POT5_PIN                     PINHD-1X1        1X01               Pin header 1x1 for 0.1" spacing                   
+POT6_PIN                     PINHD-1X1        1X01               Pin header 1x1 for 0.1" spacing                   
+R17           1k             RESISTOR7MM      7MM_RESISTOR       Standard resistor, various versions               
+R18           1k             RESISTOR7MM      7MM_RESISTOR       Standard resistor, various versions               
+R21           1k             RESISTOR7MM      7MM_RESISTOR       Standard resistor, various versions               
+S3            D6_PUSH_SWITCH D6_PUSH_SWITCH   D6_PUSH_SWITCH     Push switch                                       
+S4            D6_PUSH_SWITCH D6_PUSH_SWITCH   D6_PUSH_SWITCH     Push switch                                       
+SW1_PIN                      PINHD-1X1        1X01               Pin header 1x1 for 0.1" spacing                   
+SW2_PIN                      PINHD-1X1        1X01               Pin header 1x1 for 0.1" spacing                   
+VR1           10K            9MM_SNAP-IN_POT_ 9MM_SNAP-IN_POT    9mm vertical snap-in pot, Alpha / Panasonic style 
+VR2           10K            9MM_SNAP-IN_POT_ 9MM_SNAP-IN_POT    9mm vertical snap-in pot, Alpha / Panasonic style 
+VR3           10K            9MM_SNAP-IN_POT_ 9MM_SNAP-IN_POT    9mm vertical snap-in pot, Alpha / Panasonic style 
+VR4           10K            9MM_SNAP-IN_POT_ 9MM_SNAP-IN_POT    9mm vertical snap-in pot, Alpha / Panasonic style 
+VR5           10K            9MM_SNAP-IN_POT_ 9MM_SNAP-IN_POT    9mm vertical snap-in pot, Alpha / Panasonic style 
+VR7           10K            9MM_SNAP-IN_POT_ 9MM_SNAP-IN_POT    9mm vertical snap-in pot, Alpha / Panasonic style 
