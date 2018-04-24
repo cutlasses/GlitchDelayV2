@@ -1,0 +1,59 @@
+Partlist exported from /Users/scottpitkethly/Documents/eagle/Glitch Delay V2/Glitch Delay Bottom.sch at 24/04/2018 20:37
+
+Part          Value                     Device                    Package             Description                                               MF MPN OC_FARNELL OC_NEWARK
+3.3V_PIN                                PINHD-1X1                 1X01                Pin header 1x1 for 0.1" spacing                                                      
+AGND_PIN                                PINHD-1X1                 1X01                Pin header 1x1 for 0.1" spacing                                                      
+AUDIO_IN_PIN                            PINHD-1X1                 1X01                Pin header 1x1 for 0.1" spacing                                                      
+AUDIO_OUT_PIN                           PINHD-1X1                 1X01                Pin header 1x1 for 0.1" spacing                                                      
+C1            0.1uF                     C-US025-030X050           C025-030X050        CAPACITOR, American symbol                                                           
+C3            0.1uF                     C-US025-030X050           C025-030X050        CAPACITOR, American symbol                                                           
+C4            10uF                      C-US025-030X050           C025-030X050        CAPACITOR, American symbol                                                           
+C5            10uF                      CPOL-USE2,5-6E            E2,5-6E             POLARIZED CAPACITOR, American symbol                                                 
+C6            1uF                       CPOL-USE2.5-7             E2,5-7              POLARIZED CAPACITOR, American symbol                                                 
+C7            0.1uF                     C-US025-030X050           C025-030X050        CAPACITOR, American symbol                                                           
+C8            10uF                      CPOL-USE2,5-6E            E2,5-6E             POLARIZED CAPACITOR, American symbol                                                 
+C9            0.1uF                     C-US025-030X050           C025-030X050        CAPACITOR, American symbol                                                           
+C10           0.1uF                     C-US025-030X050           C025-030X050        CAPACITOR, American symbol                                                           
+D1                                      SMALL_DIODEDO35-7         DO35-7              Small Signal Diode                                                                   
+D2                                      SMALL_DIODEDO35-7         DO35-7              Small Signal Diode                                                                   
+D3            1N4001                    1N4004                    DO41-10             DIODE                                                                                
+D4            1N4001                    1N4004                    DO41-10             DIODE                                                                                
+GLINK                                   RESISTOR7MM               7MM_RESISTOR        Standard resistor, various versions                                                  
+GND_PIN                                 PINHD-1X1                 1X01                Pin header 1x1 for 0.1" spacing                                                      
+I2C_5V_PIN                              PINHD-1X1                 1X01                Pin header 1x1 for 0.1" spacing                                                      
+I2C_GND_PIN                             PINHD-1X1                 1X01                Pin header 1x1 for 0.1" spacing                                                      
+LED1_PIN                                PINHD-1X1                 1X01                Pin header 1x1 for 0.1" spacing                                                      
+LED2_PIN                                PINHD-1X1                 1X01                Pin header 1x1 for 0.1" spacing                                                      
+LED3_PIN                                PINHD-1X1                 1X01                Pin header 1x1 for 0.1" spacing                                                      
+POT1_PIN                                PINHD-1X1                 1X01                Pin header 1x1 for 0.1" spacing                                                      
+POT2_PIN                                PINHD-1X1                 1X01                Pin header 1x1 for 0.1" spacing                                                      
+POT3_PIN                                PINHD-1X1                 1X01                Pin header 1x1 for 0.1" spacing                                                      
+POT4_PIN                                PINHD-1X1                 1X01                Pin header 1x1 for 0.1" spacing                                                      
+POT5_PIN                                PINHD-1X1                 1X01                Pin header 1x1 for 0.1" spacing                                                      
+POT6_PIN                                PINHD-1X1                 1X01                Pin header 1x1 for 0.1" spacing                                                      
+R1            4.7k                      RESISTOR7MM               7MM_RESISTOR        Standard resistor, various versions                                                  
+R2            8.3k                      RESISTOR7MM               7MM_RESISTOR        Standard resistor, various versions                                                  
+R3            1k                        RESISTOR7MM               7MM_RESISTOR        Standard resistor, various versions                                                  
+R4            100k                      RESISTOR7MM               7MM_RESISTOR        Standard resistor, various versions                                                  
+R5            100k                      RESISTOR7MM               7MM_RESISTOR        Standard resistor, various versions                                                  
+R6            100k                      RESISTOR7MM               7MM_RESISTOR        Standard resistor, various versions                                                  
+R7            12k                       RESISTOR7MM               7MM_RESISTOR        Standard resistor, various versions                                                  
+R8            100k                      RESISTOR7MM               7MM_RESISTOR        Standard resistor, various versions                                                  
+R9            100k                      RESISTOR7MM               7MM_RESISTOR        Standard resistor, various versions                                                  
+R10           100k                      RESISTOR7MM               7MM_RESISTOR        Standard resistor, various versions                                                  
+R15           1k                        RESISTOR7MM               7MM_RESISTOR        Standard resistor, various versions                                                  
+R16           4.7k                      RESISTOR7MM               7MM_RESISTOR        Standard resistor, various versions                                                  
+R19           PTC-SOD70                 PTC-SOD70                 SOD70               Positive Temperature Coefficient Resistor (PTC) termistor        unknown    unknown  
+R20           PTC-SOD70                 PTC-SOD70                 SOD70               Positive Temperature Coefficient Resistor (PTC) termistor        unknown    unknown  
+SCL_PIN                                 PINHD-1X1                 1X01                Pin header 1x1 for 0.1" spacing                                                      
+SDA_PIN                                 PINHD-1X1                 1X01                Pin header 1x1 for 0.1" spacing                                                      
+SV1           EURO_POWER_HEADERFAT_PADS EURO_POWER_HEADERFAT_PADS EURO_PWR_HEADER_FAT Power Header                                                                         
+SW1_PIN                                 PINHD-1X1                 1X01                Pin header 1x1 for 0.1" spacing                                                      
+SW2_PIN                                 PINHD-1X1                 1X01                Pin header 1x1 for 0.1" spacing                                                      
+TL074         TL074_                    TL074_                    DIL14               Generic Quad Op Amp                                                                  
+TM1           10K                       TRIM                      6MM                                                                                                      
+U$2           TEENSY_3.5/3.6            TEENSY_3.5/3.6            TEENSY_3.5/3.6                                                                                           
+U$5           FB                        FB                        FB                  Ferrite bead                                                                         
+U$6           FB                        FB                        FB                  Ferrite bead                                                                         
+VREG          7805T                     7805T                     TO220H              Positive VOLTAGE REGULATOR                                                           
+VSUP          MIC803                    MIC803                    SOT23-3                                                                                                  
