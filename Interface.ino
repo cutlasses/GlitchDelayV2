@@ -31,9 +31,7 @@ bool DIAL_BASE::set_current_value( int new_value )
 
 float DIAL_BASE::value() const
 {
-  return m_current_value;
-  /*
-  const float vf = m_current_value / 1024.0f;
+  const float vf = m_current_value / 65536.0f;
 
   if( m_invert )
   {
@@ -43,7 +41,6 @@ float DIAL_BASE::value() const
   {
     return vf;
   }
-  */
 }
 
 DIAL::DIAL( int data_pin, bool invert ) :

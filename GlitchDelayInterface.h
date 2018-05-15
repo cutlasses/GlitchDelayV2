@@ -5,11 +5,11 @@
 
 class GLITCH_DELAY_INTERFACE
 {
-  static const int      MODE_BUTTON_PIN                 = 1;
-  static const int      BPM_BUTTON_PIN                  = 2;
+  static const int      MODE_BUTTON_PIN                 = 2;
+  static const int      BPM_BUTTON_PIN                  = 1;
   static const int      LED_1_PIN                       = 29;
-  static const int      LED_2_PIN                       = 7;
-  static const int      LED_3_PIN                       = 11;
+  static const int      LED_2_PIN                       = 11;
+  static const int      LED_3_PIN                       = 7;
 
   static const int      NUM_MODES                       = 2;
 

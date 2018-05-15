@@ -10,7 +10,7 @@ GLITCH_DELAY_INTERFACE::GLITCH_DELAY_INTERFACE() :
 #ifdef I2C_INTERFACE
   m_dials( { I2C_DIAL( true ), I2C_DIAL( true ), I2C_DIAL( true ), I2C_DIAL( true ), I2C_DIAL( true ), I2C_DIAL( true ) } ),
 #else // !I2C_INTERFACE
-  m_dials( { DIAL( A16, true ), DIAL( A17, true ), DIAL( A18, true ), DIAL( A19, true ), DIAL( A20, true ), DIAL( A13, true ) } ),
+  m_dials( { DIAL( A20 ), DIAL( A19 ), DIAL( A18 ), DIAL( A17 ), DIAL( A16 ), DIAL( A13 ) } ),
 #endif // !I2C_INTERFACE
   m_bpm_button( BPM_BUTTON_PIN, false ),
   m_mode_button( MODE_BUTTON_PIN, false ),

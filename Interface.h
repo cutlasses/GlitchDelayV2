@@ -30,7 +30,7 @@ class DIAL : public DIAL_BASE
   
 public:
 
-  DIAL( int data_pin, bool invert );
+  DIAL( int data_pin, bool invert = false );
 
   bool          update( ADC& adc );
 };
