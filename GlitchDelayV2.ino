@@ -87,6 +87,35 @@ GLITCH_DELAY_INTERFACE   glitch_delay_interface;
 
 //////////////////////////////////////
 
+void set_adc1_to_3v3()
+{
+  ADC1_SC3 = 0; // cancel calibration
+  ADC1_SC2 = ADC_SC2_REFSEL(0); // vcc/ext ref 3.3v
+
+  ADC1_SC3 = ADC_SC3_CAL;  // begin calibration
+
+  uint16_t sum;
+
+  //serial_print("wait_for_cal\n");
+
+  while( (ADC1_SC3 & ADC_SC3_CAL))
+  {
+    // wait
+  }
+
+  __disable_irq();
+
+    sum = ADC1_CLPS + ADC1_CLP4 + ADC1_CLP3 + ADC1_CLP2 + ADC1_CLP1 + ADC1_CLP0;
+    sum = (sum / 2) | 0x8000;
+    ADC1_PG = sum;
+    sum = ADC1_CLMS + ADC1_CLM4 + ADC1_CLM3 + ADC1_CLM2 + ADC1_CLM1 + ADC1_CLM0;
+    sum = (sum / 2) | 0x8000;
+    ADC1_MG = sum;
+
+  __enable_irq();
+  
+}
+
 void setup()
 {
   Serial.begin(9600);
@@ -100,6 +129,8 @@ void setup()
   AudioMemory(16);
 
   analogReference(INTERNAL);
+
+  set_adc1_to_3v3();
 
 #ifdef STANDALONE_AUDIO
   SPI.setMOSI(SDCARD_MOSI_PIN);
