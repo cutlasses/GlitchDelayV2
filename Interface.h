@@ -19,7 +19,7 @@ public:
   DIAL_BASE( bool invert );
   virtual ~DIAL_BASE();
 
-  float         value() const;
+  float         value( float max_value = 65536.0f ) const;
 };
 
 //////////////////////////////////////

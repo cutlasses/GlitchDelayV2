@@ -29,9 +29,9 @@ bool DIAL_BASE::set_current_value( int new_value )
   return false; 
 }
 
-float DIAL_BASE::value() const
+float DIAL_BASE::value( float max_value ) const
 {
-  const float vf = m_current_value / 65536.0f;
+  const float vf = m_current_value / max_value;
 
   if( m_invert )
   {
@@ -100,8 +100,9 @@ const DIAL& CV_DIAL::dial() const
 
 float CV_DIAL::value() const
 {
-  // todo - add and clamp CV
-  return m_dial.value();
+  const float dial_value  = m_dial.value();
+  const float cv_value    = m_cv.value( 1024.0f );
+  return clamp( dial_value + cv_value, 0.0f, 1.0f );
 }
 
 //////////////////////////////////////

@@ -229,13 +229,12 @@ void loop()
   static int count = 0;
   if( ++count % 1000 == 0 )
   {
-
     Serial.print("Size ");
     Serial.print(size);
     Serial.print("\t");
     
-    Serial.print("speed ");
-    Serial.print(speed);
+    Serial.print("Jitter ");
+    Serial.print(jitter);
     Serial.print("\t");
 
     Serial.print("feedback ");
@@ -249,7 +248,6 @@ void loop()
     Serial.print("****\n");
   }
   */
-
 #endif // DEBUG_OUTPUT
     
 #ifdef PERF_CHECK
