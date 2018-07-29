@@ -48,6 +48,22 @@ public:
 
 //////////////////////////////////////
 
+// combine on-board pot with remote CV input
+class CV_DIAL
+{
+  DIAL          m_dial;
+  I2C_DIAL      m_cv;
+
+public:
+
+  CV_DIAL( int dial_pin );
+  
+  bool          update( ADC& adc );
+  float         value() const;
+};
+
+//////////////////////////////////////
+
 class BUTTON
 {
   int16_t       m_data_pin;

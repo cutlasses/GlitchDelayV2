@@ -1,17 +1,11 @@
 #include "GlitchDelayInterface.h"
 #include "CompileSwitches.h"
 
-#ifdef I2C_INTERFACE
-const int I2C_ADDRESS(111); 
-const int I2C_DATA_SIZE_IN_BYTES(12);
-#endif
+constexpr int I2C_ADDRESS(111); 
+constexpr int I2C_DATA_SIZE_IN_BYTES(12);
   
 GLITCH_DELAY_INTERFACE::GLITCH_DELAY_INTERFACE() :
-#ifdef I2C_INTERFACE
-  m_dials( { I2C_DIAL( true ), I2C_DIAL( true ), I2C_DIAL( true ), I2C_DIAL( true ), I2C_DIAL( true ), I2C_DIAL( true ) } ),
-#else // !I2C_INTERFACE
-  m_dials( { DIAL( A20 ), DIAL( A19 ), DIAL( A18 ), DIAL( A17 ), DIAL( A16 ), DIAL( A13 ) } ),
-#endif // !I2C_INTERFACE
+  m_dials( { CV_DIAL( A20 ), CV_DIAL( A19 ), CV_DIAL( A18 ), CV_DIAL( A17 ), CV_DIAL( A16 ), CV_DIAL( A13 ) } ),
   m_bpm_button( BPM_BUTTON_PIN, false ),
   m_mode_button( MODE_BUTTON_PIN, false ),
   m_tap_bpm( BPM_BUTTON_PIN ),
@@ -45,11 +39,7 @@ void GLITCH_DELAY_INTERFACE::setup()
 #endif
 }
 
-#ifdef I2C_INTERFACE
-void GLITCH_DELAY_INTERFACE::update( uint32_t time_in_ms )
-#else
 void GLITCH_DELAY_INTERFACE::update( ADC& adc, uint32_t time_in_ms )
-#endif
 {
 #ifdef I2C_INTERFACE
   // start I2C with PIC chip
@@ -59,11 +49,7 @@ void GLITCH_DELAY_INTERFACE::update( ADC& adc, uint32_t time_in_ms )
   // read each pot
   for( int d = 0; d < NUM_DIALS; ++d )
   {
-#ifdef I2C_INTERFACE
-    m_dials[d].update();
-#else
     m_dials[d].update( adc );
-#endif
   }
   
   m_bpm_button.update( time_in_ms );
@@ -91,7 +77,7 @@ void GLITCH_DELAY_INTERFACE::update( ADC& adc, uint32_t time_in_ms )
 
 #ifdef DEBUG_OUTPUT
 
-  auto debug_dial = []( int dial_index, const DIAL_BASE& dial )
+  auto debug_dial = []( int dial_index, const CV_DIAL& dial )
   {
       Serial.print( dial_index );
       Serial.print( ":" );

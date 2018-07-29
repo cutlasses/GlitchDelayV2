@@ -19,33 +19,25 @@ class GLITCH_DELAY_INTERFACE
  
   static const int32_t  BIT_DEPTH_BUTTON_HOLD_TIME_MS   = 2000;
 
-#ifdef I2C_INTERFACE
-  I2C_DIAL          m_dials[NUM_DIALS];
-#else // !I2C_INTERFACE
-  DIAL              m_dials[NUM_DIALS];
-#endif // !I2C_INTERFACE
+  CV_DIAL               m_dials[NUM_DIALS];
 
-  BUTTON            m_bpm_button;
-  BUTTON            m_mode_button;
-  TAP_BPM           m_tap_bpm;        // same button as mode
+  BUTTON                m_bpm_button;
+  BUTTON                m_mode_button;
+  TAP_BPM               m_tap_bpm;        // same button as mode
   
-  LED               m_beat_led;
-  LED               m_mode_leds[NUM_MODES];
+  LED                   m_beat_led;
+  LED                   m_mode_leds[NUM_MODES];
 
-  int               m_current_mode;
-  bool              m_change_bit_depth_valid;
-  bool              m_reduced_bit_depth;
+  int                   m_current_mode;
+  bool                  m_change_bit_depth_valid;
+  bool                  m_reduced_bit_depth;
 
 public:
 
   GLITCH_DELAY_INTERFACE();
 
   void            setup();
-#ifdef I2C_INTERFACE
-  void            update( uint32_t time_in_ms );
-#else // !I2C_INTERFACE
   void            update( ADC& adc, uint32_t time_in_ms );
-#endif // !I2C_INTERFACE
 
   float           loop_size() const;
   float           loop_speed() const;

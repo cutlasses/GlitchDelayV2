@@ -78,6 +78,29 @@ bool I2C_DIAL::update()
 
 //////////////////////////////////////
 
+CV_DIAL::CV_DIAL( int dial_pin ) :
+  m_dial( dial_pin ),
+  m_cv(false)
+{
+
+}
+
+bool CV_DIAL::update( ADC& adc )
+{
+  const bool dial_change  = m_dial.update( adc );
+  const bool cv_change    = m_cv.update();
+
+  return dial_change || cv_change;
+}
+
+float CV_DIAL::value() const
+{
+  // todo - add and clamp CV
+  return m_dial.value();
+}
+
+//////////////////////////////////////
+
 BUTTON::BUTTON( int data_pin, bool is_toggle ) :
   m_data_pin( data_pin ),
   m_is_toggle( is_toggle ),

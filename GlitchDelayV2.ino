@@ -20,16 +20,12 @@
 // wrap in a struct to ensure initialisation order
 struct IO
 {
-#ifndef I2C_INTERFACE
   ADC                         adc;
-#endif
   AudioInputAnalog            audio_input;
   AudioOutputAnalog           audio_output;
 
   IO() :
-#ifndef I2C_INTERFACE
     adc(),
-#endif
     audio_input(A0),
     audio_output()
   {
@@ -192,12 +188,8 @@ void loop()
 
   glitch_delay_effect.set_loop_size( 0.2f );
   */
-
-#ifdef I2C_INTERFACE
-  glitch_delay_interface.update( time_in_ms );
-#else// !I2C_INTERFACE
+  
   glitch_delay_interface.update( io.adc, time_in_ms );
-#endif  
 
   const float wet_dry = clamp( glitch_delay_interface.dry_wet_mix(), 0.0f, 1.0f );
   wet_dry_mixer.gain( DRY_CHANNEL, 1.0f - wet_dry );
