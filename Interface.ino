@@ -93,6 +93,11 @@ bool CV_DIAL::update( ADC& adc )
   return dial_change || cv_change;
 }
 
+const DIAL& CV_DIAL::dial() const
+{
+  return m_dial;
+}
+
 float CV_DIAL::value() const
 {
   // todo - add and clamp CV
@@ -253,6 +258,56 @@ void LED::update( uint32_t time_ms )
     {
       digitalWrite( m_data_pin, LOW );
     }
+  }
+}
+
+//////////////////////////////////////
+
+PUSH_AND_TURN::PUSH_AND_TURN( const DIAL& dial, const BUTTON& button, float initial_secondary_value ) :
+  m_dial( dial ),
+  m_button( button ),
+  m_primary_value( 0.0f ),
+  m_secondary_value( initial_secondary_value ),
+  m_push_and_turning( false )
+{
+  
+}
+
+float PUSH_AND_TURN::primary_value() const
+{
+  return m_primary_value;
+}
+
+float PUSH_AND_TURN::secondary_value() const
+{
+  return m_secondary_value;
+}
+
+void PUSH_AND_TURN::update()
+{
+  if( m_push_and_turning )
+  {
+    // keep going until button is release
+    m_push_and_turning = m_button.down_time_ms() > 0; 
+  }
+  else
+  {
+    // check for start of push and turn
+    if( m_button.down_time_ms() > PUSH_AND_TURN_DOWN_TIME_MS &&
+        abs( m_dial.value() - m_secondary_value ) > PUSH_AND_TURN_DIAL_TOLERANCE )
+    {
+      m_push_and_turning = true;
+    }
+  }
+
+  // if holding button AND turning dial - update secondary value
+  if( m_push_and_turning )
+  {
+    m_secondary_value = m_dial.value();
+  }
+  else
+  {
+    m_primary_value = m_dial.value();
   }
 }
 

@@ -11,6 +11,8 @@ GLITCH_DELAY_INTERFACE::GLITCH_DELAY_INTERFACE() :
   m_tap_bpm( BPM_BUTTON_PIN ),
   m_beat_led(),
   m_mode_leds(),
+  m_head_mix_push_and_turn( m_dials[0].dial(), m_bpm_button, HEAD_MIX_INITIAL_VALUE ),
+  m_feedback_push_and_turn( m_dials[0].dial(), m_mode_button, FEEDBACK_INITIAL_VALUE ),
   m_current_mode( 0 ),
   m_change_bit_depth_valid( true ),
   m_reduced_bit_depth( false )
@@ -56,6 +58,9 @@ void GLITCH_DELAY_INTERFACE::update( ADC& adc, uint32_t time_in_ms )
   m_mode_button.update( time_in_ms );
 
   m_tap_bpm.update( time_in_ms );
+
+  m_head_mix_push_and_turn.update();
+  m_feedback_push_and_turn.update();
  
   if( m_tap_bpm.beat_type() != TAP_BPM::NO_BEAT )
   {
@@ -106,7 +111,7 @@ float GLITCH_DELAY_INTERFACE::loop_speed() const
 
 float GLITCH_DELAY_INTERFACE::feedback() const
 {
-  return 0.7f;
+  return m_feedback_push_and_turn.secondary_value();
 }
 
 float GLITCH_DELAY_INTERFACE::low_mix() const
@@ -132,6 +137,11 @@ float GLITCH_DELAY_INTERFACE::reverse_mix() const
 float GLITCH_DELAY_INTERFACE::dry_wet_mix() const
 {
   return 1.0f; // fully wet
+}
+
+float GLITCH_DELAY_INTERFACE::head_mix() const
+{
+  return m_head_mix_push_and_turn.secondary_value();
 }
 
 const TAP_BPM& GLITCH_DELAY_INTERFACE::tap_bpm() const

@@ -213,10 +213,11 @@ void loop()
   const bool freeze = glitch_delay_interface.mode() == 1;
   glitch_delay_effect.set_freeze_active( freeze );
 
-  glitch_mixer.gain( 0, glitch_delay_interface.low_mix() * 0.25f );
-  glitch_mixer.gain( 1,glitch_delay_interface.normal_mix() * 0.25f );
-  glitch_mixer.gain( 2, glitch_delay_interface.high_mix() * 0.25f );
-  glitch_mixer.gain( 3, glitch_delay_interface.reverse_mix() * 0.25f );
+  const float head_mix = glitch_delay_interface.head_mix();
+  glitch_mixer.gain( 0, glitch_delay_interface.low_mix() * head_mix );
+  glitch_mixer.gain( 1,glitch_delay_interface.normal_mix() * head_mix );
+  glitch_mixer.gain( 2, glitch_delay_interface.high_mix() * head_mix );
+  glitch_mixer.gain( 3, glitch_delay_interface.reverse_mix() * head_mix );
 
   if( glitch_delay_interface.tap_bpm().beat_type() == TAP_BPM::AUTO_BEAT )
   {

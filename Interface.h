@@ -59,6 +59,8 @@ public:
   CV_DIAL( int dial_pin );
   
   bool          update( ADC& adc );
+  const DIAL&   dial() const;
+  
   float         value() const;
 };
 
@@ -71,8 +73,8 @@ class BUTTON
   int16_t       m_prev_is_active : 1;
   int16_t       m_is_active : 1;
   int16_t       m_down_time_valid : 1;
-  uint32_t       m_down_time_stamp;
-  uint32_t       m_down_time_curr;
+  uint32_t      m_down_time_stamp;
+  uint32_t      m_down_time_curr;
 
   Bounce        m_bounce;
 
@@ -112,4 +114,31 @@ public:
   void          setup();
   void          update( uint32_t time_ms );       
 };
+
+//////////////////////////////////////
+
+// toggle button and dial, states set independently. Turn dial whilst holding button changes secondary value
+class PUSH_AND_TURN
+{
+  const DIAL&   m_dial;
+  const BUTTON& m_button;
+
+  float         m_primary_value;
+  float         m_secondary_value;
+
+  bool          m_push_and_turning;
+
+  static constexpr int    PUSH_AND_TURN_DOWN_TIME_MS    = 250;
+  static constexpr float  PUSH_AND_TURN_DIAL_TOLERANCE  = 0.1f;
+  
+ public:
+
+  PUSH_AND_TURN( const DIAL& dial, const BUTTON& button, float initial_secondary_value ); // only works for toggle pins
+
+  float         primary_value() const;
+  float         secondary_value() const;
+
+  void          update();
+};
+
 
