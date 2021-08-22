@@ -13,9 +13,11 @@
 
 
 // Use these with the audio adaptor board
+/*
 #define SDCARD_CS_PIN    10
 #define SDCARD_MOSI_PIN  7
 #define SDCARD_SCK_PIN   14
+*/
 
 // wrap in a struct to ensure initialisation order
 struct IO
@@ -260,7 +262,3 @@ void loop()
   }
 #endif
 }
-
-
-
-
